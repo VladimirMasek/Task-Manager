@@ -5,7 +5,7 @@ export const ToDoListContext = createContext();
 
 function ToDoListOverviewProvider({ children }) {
   const [showArchived, setShowArchived] = useState(false);
-  const [showIsDone, setShowIsDone] = useState(false);
+  const [showIsDone, setShowIsDone] = useState(true);
   const { loggedInUser } = useContext(UserContext);
 
   const [toDoListList, setToDoListList] = useState([
@@ -301,6 +301,29 @@ function ToDoListOverviewProvider({ children }) {
     });
   }
 
+  function handleUpdateListName(toDoListId, newName) {
+    setToDoListList((current) =>
+      current.map((list) =>
+        list.id === toDoListId ? { ...list, name: newName } : list
+      )
+    );
+  }
+
+  const handleUpdateItemName = (listId, itemId, newName) => {
+    setToDoListList((current) =>
+      current.map((list) =>
+        list.id === listId
+          ? {
+              ...list,
+              itemList: list.itemList.map((item) =>
+                item.id === itemId ? { ...item, name: newName } : item
+              ),
+            }
+          : list
+      )
+    );
+  };
+
   return (
     <ToDoListContext.Provider
       value={{
@@ -318,6 +341,8 @@ function ToDoListOverviewProvider({ children }) {
         handleAddItem,
         handleCreateNewList,
         handleAddMember,
+        handleUpdateListName,
+        handleUpdateItemName,
       }}
     >
       {children}

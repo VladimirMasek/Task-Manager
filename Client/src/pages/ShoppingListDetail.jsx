@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { UserContext } from "../Users/UserProvider.jsx";
 import { ToDoListContext } from "../my_components/ToDoListOverviewProvider";
@@ -48,6 +48,8 @@ const ShoppingListDetail = () => {
     handleDeleteItem,
     handleAddItem,
     handleAddMember,
+    handleUpdateListName,
+    handleUpdateItemName,
   } = useContext(ToDoListContext);
 
   const selectedList = toDoListList.find((list) => list.id === toDoListId);
@@ -74,15 +76,21 @@ const ShoppingListDetail = () => {
                 <Link unstyled href="#items">
                   <HStack p="4">
                     <Editable.Root
+                      key={selectedList.id}
                       maxLength={25}
                       defaultValue={selectedList.name}
                       activationMode="disabled"
-                      disabled={
-                        loggedInUser.id === selectedList.owner.id ? false : true
+                      disabled={loggedInUser.id !== selectedList.owner.id}
+                      onValueChange={(newName) =>
+                        handleUpdateListName(selectedList.id, newName.value)
                       }
                     >
                       <Editable.Preview />
-                      <Editable.Input />
+                      <Editable.Input
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") e.preventDefault();
+                        }}
+                      />
                       <Editable.Control>
                         <Editable.EditTrigger asChild>
                           <IconButton variant="ghost" size="xs">
@@ -95,11 +103,7 @@ const ShoppingListDetail = () => {
                           </IconButton>
                         </Editable.CancelTrigger>
                         <Editable.SubmitTrigger asChild>
-                          <IconButton
-                            variant="outline"
-                            size="xs"
-                            //onClick={(e) => console.log(e.target.value)}
-                          >
+                          <IconButton variant="outline" size="xs">
                             <Icon path={mdiCheck} size={1} />
                           </IconButton>
                         </Editable.SubmitTrigger>
@@ -150,8 +154,16 @@ const ShoppingListDetail = () => {
                             }}
                           >
                             <Editable.Root
+                              key={item.id}
                               defaultValue={item.name}
                               activationMode="dblclick"
+                              onValueChange={(newName) =>
+                                handleUpdateItemName(
+                                  selectedList.id,
+                                  item.id,
+                                  newName.value
+                                )
+                              }
                             >
                               <Editable.Preview />
                               <Editable.Input />
@@ -186,7 +198,11 @@ const ShoppingListDetail = () => {
                         <Text>{selectedList.owner.name}</Text>
                       </Badge>
                     </HStack>
-                    <Text>Members</Text>
+
+                    {selectedList.members.length === 0 ? null : (
+                      <Text>Members</Text>
+                    )}
+
                     {selectedList.members.map((member) => (
                       <HStack key={member.id}>
                         <Avatar name={member.name} />
@@ -217,7 +233,7 @@ const ShoppingListDetail = () => {
                   </Box>
                   {loggedInUser.id === selectedList.owner.id ? (
                     <Box mt="40px">
-                      <Text>Add Users</Text>
+                      {nonMembers.length === 0 ? null : <Text>Add Users</Text>}
                       {nonMembers.map((user) => (
                         <HStack key={user.id}>
                           <Avatar name={user.name} />
