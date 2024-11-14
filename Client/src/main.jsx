@@ -1,12 +1,19 @@
-import { Provider } from "./components/ui/provider.jsx";
+// React
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+// Router
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import ToDoListOverview from "./pages/ToDoListOverview.jsx";
-import NotFoundPage from "./pages/NotFoundPage.jsx";
-import ShoppingListDetail from "./pages/ShoppingListDetail.jsx";
+// Context providers
+import { Provider } from "./components/ui/provider.jsx";
 import UserProvider from "./Users/UserProvider.jsx";
 import ToDoListOverviewProvider from "./my_components/ToDoListOverviewProvider.jsx";
+// My components
+import ToDoListOverview from "./pages/ToDoListOverview.jsx";
+import ShoppingListDetail from "./pages/ShoppingListDetail.jsx";
+import NotFoundPage from "./pages/NotFoundPage.jsx";
+// CSS
+import "./main.css";
+//import "./i18n"
 
 const router = createBrowserRouter([
   {
