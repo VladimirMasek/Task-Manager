@@ -1,13 +1,20 @@
-import { createContext, useContext, useMemo, useState } from "react";
+// React hooks
+import { createContext, useContext, useMemo, useState, useEffect } from "react";
+// UI hook
+import { useBreakpointValue } from "@chakra-ui/react";
+// Context provider
 import { UserContext } from "../Users/UserProvider.jsx";
 
 export const ToDoListContext = createContext();
 
 function ToDoListOverviewProvider({ children }) {
-  const [showArchived, setShowArchived] = useState(false);
-  const [showIsDone, setShowIsDone] = useState(true);
+  // ToDoListOverviewProvider
   const { loggedInUser } = useContext(UserContext);
-
+  // Toolbar
+  const [showArchived, setShowArchived] = useState(false);
+  // ShoppingListDetail
+  const [showIsDone, setShowIsDone] = useState(true);
+  // toDoList data
   const [toDoListList, setToDoListList] = useState([
     {
       id: 1,
@@ -183,23 +190,15 @@ function ToDoListOverviewProvider({ children }) {
       ],
     },
   ]);
+  // break point value for mobile
+  const [isMobile, setIsMobile] = useState(false);
+  const mobileBreakpoint = useBreakpointValue({ base: true, md: false });
 
-  function handleArchiveToDoList({ id }) {
-    setToDoListList((current) => {
-      const toDoListIndex = current.findIndex((toDoList) => toDoList.id === id);
-      current[toDoListIndex] = { ...current[toDoListIndex], archived: true };
-      return current.slice();
-    });
-  }
+  useEffect(() => {
+    setIsMobile(mobileBreakpoint);
+  }, [mobileBreakpoint]);
 
-  function handleDeleteToDoList({ id }) {
-    setToDoListList((current) => {
-      const toDoListIndex = current.findIndex((toDoList) => toDoList.id === id);
-      current.splice(toDoListIndex, 1);
-      return current.slice();
-    });
-  }
-
+  // ToDoListOverviewList
   const filteredtoDoListList = useMemo(() => {
     return toDoListList.filter((toDoList) => {
       const isOwnerOrMember =
@@ -211,50 +210,49 @@ function ToDoListOverviewProvider({ children }) {
     });
   }, [toDoListList, loggedInUser.id, showArchived]);
 
-  function handleCheck({ toDoListId, itemId }) {
+  // toDoList -archive -delete -create - updateName
+
+  // ToDoListOverviewItem
+  function handleArchiveToDoList({ id }) {
+    setToDoListList((current) => {
+      const toDoListIndex = current.findIndex((toDoList) => toDoList.id === id);
+      current[toDoListIndex] = { ...current[toDoListIndex], archived: true };
+      return current.slice();
+    });
+  }
+  // ToDoListOverviewItem
+  function handleDeleteToDoList({ id }) {
+    setToDoListList((current) => {
+      const toDoListIndex = current.findIndex((toDoList) => toDoList.id === id);
+      current.splice(toDoListIndex, 1);
+      return current.slice();
+    });
+  }
+  // Toolbar
+  function handleCreateNewList(name, addedUsers) {
+    const newList = {
+      id: Date.now(),
+      name: name || "New List",
+      owner: loggedInUser,
+      members: addedUsers || [],
+      archived: false,
+      dateOfCreation: new Date().toISOString().split("T")[0],
+      itemList: [],
+    };
+    setToDoListList((current) => [...current, newList]);
+  }
+  // ShoppingListDetail -> ToDoListTittle
+  function handleUpdateListName(toDoListId, newName) {
     setToDoListList((current) =>
-      current.map((list) => {
-        if (list.id === toDoListId) {
-          return {
-            ...list,
-            itemList: list.itemList.map((item) =>
-              item.id === itemId ? { ...item, isDone: !item.isDone } : item
-            ),
-          };
-        }
-        return list;
-      })
+      current.map((list) =>
+        list.id === toDoListId ? { ...list, name: newName } : list
+      )
     );
   }
 
-  function handleKickMember({ toDoListId, memberId }) {
-    setToDoListList((current) => {
-      return current.map((list) => {
-        if (list.id === toDoListId) {
-          return {
-            ...list,
-            members: list.members.filter((member) => member.id !== memberId),
-          };
-        }
-        return list;
-      });
-    });
-  }
+  // item -add -delete -check -updateName
 
-  function handleDeleteItem({ toDoListId, itemId }) {
-    setToDoListList((current) => {
-      return current.map((list) => {
-        if (list.id === toDoListId) {
-          return {
-            ...list,
-            itemList: list.itemList.filter((item) => item.id !== itemId),
-          };
-        }
-        return list;
-      });
-    });
-  }
-
+  //ShoppingListDetail
   function handleAddItem({ toDoListId }) {
     setToDoListList((current) => {
       return current.map((list) => {
@@ -273,42 +271,37 @@ function ToDoListOverviewProvider({ children }) {
       });
     });
   }
-
-  function handleCreateNewList() {
-    const newList = {
-      id: Date.now(),
-      name: "New List",
-      owner: loggedInUser,
-      members: [],
-      archived: false,
-      dateOfCreation: new Date().toISOString().split("T")[0],
-      itemList: [],
-    };
-    setToDoListList((current) => [...current, newList]);
-  }
-
-  function handleAddMember({ toDoListId, user }) {
+  // Item
+  function handleDeleteItem({ toDoListId, itemId }) {
     setToDoListList((current) => {
-      const listIndex = current.findIndex((list) => list.id === toDoListId);
-      if (listIndex !== -1) {
-        const updatedList = { ...current[listIndex] };
-        updatedList.members.push({ id: user.id, name: user.name });
-        const newList = [...current];
-        newList[listIndex] = updatedList;
-        return newList;
-      }
-      return current;
+      return current.map((list) => {
+        if (list.id === toDoListId) {
+          return {
+            ...list,
+            itemList: list.itemList.filter((item) => item.id !== itemId),
+          };
+        }
+        return list;
+      });
     });
   }
-
-  function handleUpdateListName(toDoListId, newName) {
+  // Item
+  function handleCheck({ toDoListId, itemId }) {
     setToDoListList((current) =>
-      current.map((list) =>
-        list.id === toDoListId ? { ...list, name: newName } : list
-      )
+      current.map((list) => {
+        if (list.id === toDoListId) {
+          return {
+            ...list,
+            itemList: list.itemList.map((item) =>
+              item.id === itemId ? { ...item, isDone: !item.isDone } : item
+            ),
+          };
+        }
+        return list;
+      })
     );
   }
-
+  // Item
   const handleUpdateItemName = (listId, itemId, newName) => {
     setToDoListList((current) =>
       current.map((list) =>
@@ -323,6 +316,37 @@ function ToDoListOverviewProvider({ children }) {
       )
     );
   };
+
+  // member -add -kick
+
+  // Member
+  function handleAddMember({ toDoListId, addMember }) {
+    setToDoListList((current) => {
+      const listIndex = current.findIndex((list) => list.id === toDoListId);
+      if (listIndex !== -1) {
+        const updatedList = { ...current[listIndex] };
+        updatedList.members.push({ id: addMember.id, name: addMember.name });
+        const newList = [...current];
+        newList[listIndex] = updatedList;
+        return newList;
+      }
+      return current;
+    });
+  }
+  // Member
+  function handleKickMember({ toDoListId, memberId }) {
+    setToDoListList((current) => {
+      return current.map((list) => {
+        if (list.id === toDoListId) {
+          return {
+            ...list,
+            members: list.members.filter((member) => member.id !== memberId),
+          };
+        }
+        return list;
+      });
+    });
+  }
 
   return (
     <ToDoListContext.Provider
@@ -343,6 +367,7 @@ function ToDoListOverviewProvider({ children }) {
         handleAddMember,
         handleUpdateListName,
         handleUpdateItemName,
+        isMobile,
       }}
     >
       {children}

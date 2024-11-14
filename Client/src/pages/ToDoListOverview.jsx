@@ -1,8 +1,9 @@
-import { useState } from "react";
-import { VStack, Center } from "@chakra-ui/react";
+// My components
 import Header from "../my_components/Header";
 import ToDoListOverviewList from "../my_components/ToDoListOverviewList";
 import Toolbar from "../my_components/Toolbar";
+// UI components
+import { VStack, Center } from "@chakra-ui/react";
 
 const ToDoListOverview = () => {
   return (

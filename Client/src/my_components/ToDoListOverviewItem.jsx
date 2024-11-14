@@ -1,8 +1,13 @@
+//Router
+import { NavLink } from "react-router-dom";
+// Context providers
 import { useContext } from "react";
 import { UserContext } from "../Users/UserProvider.jsx";
 import { ToDoListContext } from "./ToDoListOverviewProvider";
+// Icons
 import Icon from "@mdi/react";
 import { mdiArchiveOutline, mdiTrashCanOutline } from "@mdi/js";
+// UI components
 import {
   IconButton,
   Stack,
@@ -11,18 +16,28 @@ import {
   Heading,
   Grid,
   GridItem,
-  VStack,
+  Button,
 } from "@chakra-ui/react";
+import {
+  DialogActionTrigger,
+  DialogBody,
+  DialogCloseTrigger,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogRoot,
+  DialogTitle,
+  DialogTrigger,
+} from "../components/ui/dialog";
 import {
   ProgressCircleRing,
   ProgressCircleRoot,
   ProgressCircleValueText,
 } from "../components/ui/progress-circle";
-import { NavLink } from "react-router-dom";
 
 const ToDoListOverviewItem = ({ toDoListData }) => {
   const { loggedInUser } = useContext(UserContext);
-  const { handleArchiveToDoList, handleDeleteToDoList } =
+  const { handleArchiveToDoList, handleDeleteToDoList, isMobile } =
     useContext(ToDoListContext);
 
   return (
@@ -33,8 +48,12 @@ const ToDoListOverviewItem = ({ toDoListData }) => {
         mb="10px"
       >
         <Card.Body>
-          <Grid w="100%" templateColumns="repeat(10, 1fr)">
-            <GridItem colSpan={5}>
+          <Grid
+            w="100%"
+            templateRows="repeat(3, 1fr)"
+            templateColumns="repeat(10, 1fr)"
+          >
+            <GridItem colSpan={5} rowSpan={3}>
               <Stack>
                 <NavLink key={toDoListData.id} to={`/${toDoListData.id}`}>
                   <Heading>{toDoListData.name}</Heading>
@@ -45,7 +64,8 @@ const ToDoListOverviewItem = ({ toDoListData }) => {
             </GridItem>
 
             <GridItem
-              colSpan={3}
+              colSpan={{ lgDown: 5, base: 3 }}
+              rowSpan={{ lgDown: 2, base: 3 }}
               display="flex"
               alignItems="center"
               justifyContent="center"
@@ -68,40 +88,65 @@ const ToDoListOverviewItem = ({ toDoListData }) => {
             </GridItem>
 
             <GridItem
-              colSpan={2}
+              colSpan={{ lgDown: 5, base: 2 }}
+              rowSpan={{ lgDown: 1, base: 3 }}
               display="flex"
               alignItems="center"
               justifyContent="center"
             >
-              <VStack>
-                {toDoListData.owner.id === loggedInUser.id ? (
-                  <>
-                    <IconButton
+              <DialogRoot role="alertdialog">
+                <Stack direction={{ lgDown: "row", base: "column" }}>
+                  {toDoListData.owner.id === loggedInUser.id ? (
+                    <>
+                      <DialogTrigger asChild>
+                        <IconButton colorPalette="red" variant="subtle">
+                          <Icon path={mdiTrashCanOutline} size={1} />
+                        </IconButton>
+                      </DialogTrigger>
+
+                      {toDoListData.archived ? null : (
+                        <IconButton variant="subtle">
+                          <Icon
+                            onClick={() =>
+                              handleArchiveToDoList({ id: toDoListData.id })
+                            }
+                            path={mdiArchiveOutline}
+                            size={1}
+                          />
+                        </IconButton>
+                      )}
+                    </>
+                  ) : null}
+                </Stack>
+
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Are you sure?</DialogTitle>
+                  </DialogHeader>
+                  <DialogBody>
+                    <Text>
+                      This action cannot be undone. This will permanently delete
+                      this shopping list.
+                    </Text>
+                  </DialogBody>
+                  <DialogFooter>
+                    <DialogActionTrigger asChild>
+                      <Button variant="outline">Cancel</Button>
+                    </DialogActionTrigger>
+                    <Button
+                      colorPalette="red"
                       onClick={() =>
                         handleDeleteToDoList({
                           id: toDoListData.id,
                         })
                       }
-                      colorPalette="red"
-                      variant="subtle"
                     >
-                      <Icon path={mdiTrashCanOutline} size={1} />
-                    </IconButton>
-
-                    {toDoListData.archived ? null : (
-                      <IconButton variant="subtle">
-                        <Icon
-                          onClick={() =>
-                            handleArchiveToDoList({ id: toDoListData.id })
-                          }
-                          path={mdiArchiveOutline}
-                          size={1}
-                        />
-                      </IconButton>
-                    )}
-                  </>
-                ) : null}
-              </VStack>
+                      Delete
+                    </Button>
+                  </DialogFooter>
+                  <DialogCloseTrigger />
+                </DialogContent>
+              </DialogRoot>
             </GridItem>
           </Grid>
         </Card.Body>

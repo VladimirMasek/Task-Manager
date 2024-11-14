@@ -1,3 +1,4 @@
+//UI components
 import { Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 

@@ -1,5 +1,12 @@
+// Router
+import { NavLink } from "react-router-dom";
+// Context provider
 import { useContext } from "react";
 import { UserContext } from "../Users/UserProvider.jsx";
+//Icons
+import Icon from "@mdi/react";
+import { mdiLogout } from "@mdi/js";
+// UI components
 import { HStack, Spacer, Heading, Text, Box } from "@chakra-ui/react";
 import { Avatar } from "../components/ui/avatar";
 import {
@@ -8,17 +15,17 @@ import {
   MenuRoot,
   MenuTrigger,
 } from "../components/ui/menu";
-import Icon from "@mdi/react";
-import { mdiLogout } from "@mdi/js";
 
 const Header = () => {
   const { loggedInUser, userList, setLoggedInUser } = useContext(UserContext);
 
   return (
     <HStack w="100%" h="10vh">
-      <Heading size="4xl">Task Manager</Heading>
+      <NavLink to={"/"}>
+        <Heading size="4xl">Task Manager</Heading>
+      </NavLink>
       <Spacer />
-      <Text>{loggedInUser.name}</Text>
+      <Text hideBelow="md">{loggedInUser.name}</Text>
       <MenuRoot positioning={{ placement: "right-start" }}>
         <MenuTrigger asChild>
           <Box>
