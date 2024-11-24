@@ -4,9 +4,13 @@ const shoppingListDao = require("../../dao/shoppingList-dao.js");
 const schema = Joi.object({
   listId: Joi.string().required(),
   name: Joi.string().required(),
-  members: Joi.object({
-    id: Joi.string().required(),
-  }).required(),
+  members: Joi.array()
+    .items(
+      Joi.object({
+        id: Joi.string().required(),
+      })
+    )
+    .required(),
 });
 
 async function UpdateAbl(req, res) {

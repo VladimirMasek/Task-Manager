@@ -18,7 +18,7 @@ async function ArchiveAbl(req, res) {
       return;
     }
 
-    const result = shoppingListDao.create({
+    const result = shoppingListDao.archive({
       listId: value.listId,
     });
     res.json({ success: result });

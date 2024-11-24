@@ -1,38 +1,46 @@
-function create({ item }) {
-  const generateHexId = () => {
-    return Math.floor(Math.random() * 0xffffff)
-      .toString(16)
-      .padStart(6, "0");
-  };
-
-  const newItem = {
-    id: generateHexId(),
-    name: item.name,
-    isDone: false,
-  };
-
-  return newItem;
-}
-
-function remove({ listId, itemId }) {
+function create({ list }) {
   try {
-    return true;
+    const generateHexId = () => {
+      return Math.floor(Math.random() * 0xffffff)
+        .toString(16)
+        .padStart(6, "0");
+    };
+
+    const newList = {
+      id: generateHexId(),
+      name: list.name,
+      owner: {
+        id: generateHexId(),
+      },
+      members: list.members,
+      archived: false,
+    };
+
+    return newList;
   } catch (error) {
-    throw { code: "failedToRemoveItem", message: error.message };
+    throw { code: "failedToCreateList", message: error.message };
   }
 }
 
-function update({ listId, item }) {
+function remove({ listId }) {
   try {
-    const updatedItem = {
-      id: item.id,
-      name: item.name,
-      isDone: item.isDone,
+    return true;
+  } catch (error) {
+    throw { code: "failedToRemoveList", message: error.message };
+  }
+}
+
+function update({ list }) {
+  try {
+    const updatedList = {
+      listId: list.listId,
+      name: list.name,
+      members: list.members,
     };
 
-    return updatedItem;
+    return updatedList;
   } catch (error) {
-    throw { code: "failedToUpdateItem", message: error.message };
+    throw { code: "failedToUpdateList", message: error.message };
   }
 }
 

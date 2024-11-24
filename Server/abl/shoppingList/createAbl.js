@@ -3,9 +3,13 @@ const shoppingListDao = require("../../dao/shoppingList-dao.js");
 
 const schema = Joi.object({
   name: Joi.string().required(),
-  members: Joi.object({
-    id: Joi.string().required(),
-  }).required(),
+  members: Joi.array()
+    .items(
+      Joi.object({
+        id: Joi.string().required(),
+      })
+    )
+    .required(),
 });
 
 async function CreateAbl(req, res) {
@@ -21,10 +25,10 @@ async function CreateAbl(req, res) {
       return;
     }
 
-    const result = shoppingListDao.create({
+    const createdList = shoppingListDao.create({
       list: value,
     });
-    res.json({ success: result });
+    res.json({ createdList });
   } catch (e) {
     res.status(500).json({ message: e.message });
   }
