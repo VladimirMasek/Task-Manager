@@ -3,11 +3,11 @@ import { useParams } from "react-router-dom";
 // Context Providers
 import { useContext } from "react";
 import { UserContext } from "../Users/UserProvider.jsx";
-import { ToDoListContext } from "../my_components/ToDoListOverviewProvider";
+import { ShoppingListContext } from "../my_components/ShoppingListOverviewProvider";
 // My components
 import ItemList from "../my_components/itemList.jsx";
 import MemberList from "../my_components/MemberList.jsx";
-import ToDoListTittle from "../my_components/ToDoListTittle.jsx";
+import ShoppingListTittle from "../my_components/ShoppingListTittle.jsx";
 // Icons
 import { Icon } from "@mdi/react";
 import {
@@ -32,17 +32,17 @@ import {
 
 const ShoppingListDetail = () => {
   const params = useParams();
-  const toDoListId = parseInt(params.toDoListId);
+  const shoppingListId = parseInt(params.shoppingListId);
 
   const {
-    toDoListList,
+    shoppingListList,
     showIsDone,
     setShowIsDone,
     handleAddItem,
     handleUpdateListName,
-  } = useContext(ToDoListContext);
+  } = useContext(ShoppingListContext);
 
-  const selectedList = toDoListList.find((list) => list.id === toDoListId);
+  const selectedList = shoppingListList.find((list) => list.id === shoppingListId);
   if (!selectedList) {
     return (
       <Box>
@@ -61,7 +61,7 @@ const ShoppingListDetail = () => {
             <Tabs.List>
               <Tabs.Trigger value="items" asChild>
                 <Link unstyled href="#items">
-                  <ToDoListTittle
+                  <ShoppingListTittle
                     list={selectedList}
                     handleUpdateListName={handleUpdateListName}
                     loggedInUser={loggedInUser}
@@ -110,7 +110,7 @@ const ShoppingListDetail = () => {
                   <Button
                     variant="subtle"
                     onClick={() =>
-                      handleAddItem({ toDoListId: selectedList.id })
+                      handleAddItem({ shoppingListId: selectedList.id })
                     }
                   >
                     <Icon path={mdiPlusCircleOutline} size={1} />

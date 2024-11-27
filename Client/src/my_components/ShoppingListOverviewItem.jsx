@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 // Context providers
 import { useContext } from "react";
 import { UserContext } from "../Users/UserProvider.jsx";
-import { ToDoListContext } from "./ToDoListOverviewProvider";
+import { ShoppingListContext } from "./ShoppingListOverviewProvider.jsx";
 // Icons
 import Icon from "@mdi/react";
 import { mdiArchiveOutline, mdiTrashCanOutline } from "@mdi/js";
@@ -28,25 +28,25 @@ import {
   DialogRoot,
   DialogTitle,
   DialogTrigger,
-} from "../components/ui/dialog";
+} from "../components/ui/dialog.jsx";
 import {
   ProgressCircleRing,
   ProgressCircleRoot,
   ProgressCircleValueText,
-} from "../components/ui/progress-circle";
+} from "../components/ui/progress-circle.jsx";
 
-const ToDoListOverviewItem = ({ toDoListData }) => {
+const ShoppingListOverviewItem = ({ shoppingListData }) => {
   const { loggedInUser } = useContext(UserContext);
-  const { handleArchiveToDoList, handleDeleteToDoList, isMobile } =
-    useContext(ToDoListContext);
+  const { handleArchiveShoppingList, handleDeleteShoppingList, isMobile } =
+    useContext(ShoppingListContext);
 
   return (
     <>
       <Card.Root
         w="100%"
         bg={{
-          base: toDoListData.archived ? "gray.200" : "white",
-          _dark: toDoListData.archived ? "cyan.950" : "black",
+          base: shoppingListData.archived ? "gray.200" : "white",
+          _dark: shoppingListData.archived ? "cyan.950" : "black",
         }}
         mb="10px"
       >
@@ -58,11 +58,11 @@ const ToDoListOverviewItem = ({ toDoListData }) => {
           >
             <GridItem colSpan={5} rowSpan={3}>
               <Stack>
-                <NavLink key={toDoListData.id} to={`/${toDoListData.id}`}>
-                  <Heading>{toDoListData.name}</Heading>
+                <NavLink key={shoppingListData.id} to={`/${shoppingListData.id}`}>
+                  <Heading>{shoppingListData.name}</Heading>
                 </NavLink>
-                <Text>{toDoListData.owner.name}</Text>
-                <Text>{toDoListData.dateOfCreation}</Text>
+                <Text>{shoppingListData.owner.name}</Text>
+                <Text>{shoppingListData.dateOfCreation}</Text>
               </Stack>
             </GridItem>
 
@@ -74,13 +74,13 @@ const ToDoListOverviewItem = ({ toDoListData }) => {
               justifyContent="center"
             >
               <ProgressCircleRoot
-                colorPalette={toDoListData.archived ? "red" : ""}
+                colorPalette={shoppingListData.archived ? "red" : ""}
                 value={
-                  toDoListData.itemList.length === 0
+                  shoppingListData.itemList.length === 0
                     ? 0
-                    : (toDoListData.itemList.filter((item) => item.isDone)
+                    : (shoppingListData.itemList.filter((item) => item.isDone)
                         .length /
-                        toDoListData.itemList.length) *
+                        shoppingListData.itemList.length) *
                       100
                 }
                 size="xl"
@@ -99,7 +99,7 @@ const ToDoListOverviewItem = ({ toDoListData }) => {
             >
               <DialogRoot role="alertdialog">
                 <Stack direction={{ lgDown: "row", base: "column" }}>
-                  {toDoListData.owner.id === loggedInUser.id ? (
+                  {shoppingListData.owner.id === loggedInUser.id ? (
                     <>
                       <DialogTrigger asChild>
                         <IconButton colorPalette="red" variant="subtle">
@@ -107,11 +107,11 @@ const ToDoListOverviewItem = ({ toDoListData }) => {
                         </IconButton>
                       </DialogTrigger>
 
-                      {toDoListData.archived ? null : (
+                      {shoppingListData.archived ? null : (
                         <IconButton variant="subtle">
                           <Icon
                             onClick={() =>
-                              handleArchiveToDoList({ id: toDoListData.id })
+                              handleArchiveShoppingList({ id: shoppingListData.id })
                             }
                             path={mdiArchiveOutline}
                             size={1}
@@ -139,8 +139,8 @@ const ToDoListOverviewItem = ({ toDoListData }) => {
                     <Button
                       colorPalette="red"
                       onClick={() =>
-                        handleDeleteToDoList({
-                          id: toDoListData.id,
+                        handleDeleteShoppingList({
+                          id: shoppingListData.id,
                         })
                       }
                     >
@@ -158,4 +158,4 @@ const ToDoListOverviewItem = ({ toDoListData }) => {
   );
 };
 
-export default ToDoListOverviewItem;
+export default ShoppingListOverviewItem;

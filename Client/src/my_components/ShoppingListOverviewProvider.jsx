@@ -5,17 +5,17 @@ import { useBreakpointValue } from "@chakra-ui/react";
 // Context provider
 import { UserContext } from "../Users/UserProvider.jsx";
 
-export const ToDoListContext = createContext();
+export const ShoppingListContext = createContext();
 
-function ToDoListOverviewProvider({ children }) {
-  // ToDoListOverviewProvider
+function ShoppingListOverviewProvider({ children }) {
+  // ShoppingListOverviewProvider
   const { loggedInUser } = useContext(UserContext);
   // Toolbar
   const [showArchived, setShowArchived] = useState(false);
   // ShoppingListDetail
   const [showIsDone, setShowIsDone] = useState(true);
-  // toDoList data
-  const [toDoListList, setToDoListList] = useState([
+  // shoppingList data
+  const [shoppingListList, setShoppingListList] = useState([
     {
       id: 1,
       name: "Weekly Groceries",
@@ -198,33 +198,33 @@ function ToDoListOverviewProvider({ children }) {
     setIsMobile(mobileBreakpoint);
   }, [mobileBreakpoint]);
 
-  // ToDoListOverviewList
-  const filteredtoDoListList = useMemo(() => {
-    return toDoListList.filter((toDoList) => {
+  // ShoppingListOverviewList
+  const filteredshoppingListList = useMemo(() => {
+    return shoppingListList.filter((shoppingList) => {
       const isOwnerOrMember =
-        toDoList.owner.id === loggedInUser.id ||
-        toDoList.members.some((member) => member.id === loggedInUser.id);
+        shoppingList.owner.id === loggedInUser.id ||
+        shoppingList.members.some((member) => member.id === loggedInUser.id);
       return showArchived
         ? isOwnerOrMember
-        : !toDoList.archived && isOwnerOrMember;
+        : !shoppingList.archived && isOwnerOrMember;
     });
-  }, [toDoListList, loggedInUser.id, showArchived]);
+  }, [shoppingListList, loggedInUser.id, showArchived]);
 
-  // toDoList -archive -delete -create - updateName
+  // shoppingList -archive -delete -create - updateName
 
-  // ToDoListOverviewItem
-  function handleArchiveToDoList({ id }) {
-    setToDoListList((current) => {
-      const toDoListIndex = current.findIndex((toDoList) => toDoList.id === id);
-      current[toDoListIndex] = { ...current[toDoListIndex], archived: true };
+  // ShoppingListOverviewItem
+  function handleArchiveShoppingList({ id }) {
+    setShoppingListList((current) => {
+      const shoppingListIndex = current.findIndex((shoppingList) => shoppingList.id === id);
+      current[shoppingListIndex] = { ...current[shoppingListIndex], archived: true };
       return current.slice();
     });
   }
-  // ToDoListOverviewItem
-  function handleDeleteToDoList({ id }) {
-    setToDoListList((current) => {
-      const toDoListIndex = current.findIndex((toDoList) => toDoList.id === id);
-      current.splice(toDoListIndex, 1);
+  // ShoppingListOverviewItem
+  function handleDeleteShoppingList({ id }) {
+    setShoppingListList((current) => {
+      const shoppingListIndex = current.findIndex((shoppingList) => shoppingList.id === id);
+      current.splice(shoppingListIndex, 1);
       return current.slice();
     });
   }
@@ -239,13 +239,13 @@ function ToDoListOverviewProvider({ children }) {
       dateOfCreation: new Date().toISOString().split("T")[0],
       itemList: [],
     };
-    setToDoListList((current) => [...current, newList]);
+    setShoppingListList((current) => [...current, newList]);
   }
-  // ShoppingListDetail -> ToDoListTittle
-  function handleUpdateListName(toDoListId, newName) {
-    setToDoListList((current) =>
+  // ShoppingListDetail -> ShoppingListTittle
+  function handleUpdateListName(shoppingListId, newName) {
+    setShoppingListList((current) =>
       current.map((list) =>
-        list.id === toDoListId ? { ...list, name: newName } : list
+        list.id === shoppingListId ? { ...list, name: newName } : list
       )
     );
   }
@@ -253,10 +253,10 @@ function ToDoListOverviewProvider({ children }) {
   // item -add -delete -check -updateName
 
   //ShoppingListDetail
-  function handleAddItem({ toDoListId }) {
-    setToDoListList((current) => {
+  function handleAddItem({ shoppingListId }) {
+    setShoppingListList((current) => {
       return current.map((list) => {
-        if (list.id === toDoListId) {
+        if (list.id === shoppingListId) {
           const newItem = {
             id: Date.now(),
             name: "New item",
@@ -272,10 +272,10 @@ function ToDoListOverviewProvider({ children }) {
     });
   }
   // Item
-  function handleDeleteItem({ toDoListId, itemId }) {
-    setToDoListList((current) => {
+  function handleDeleteItem({ shoppingListId, itemId }) {
+    setShoppingListList((current) => {
       return current.map((list) => {
-        if (list.id === toDoListId) {
+        if (list.id === shoppingListId) {
           return {
             ...list,
             itemList: list.itemList.filter((item) => item.id !== itemId),
@@ -286,10 +286,10 @@ function ToDoListOverviewProvider({ children }) {
     });
   }
   // Item
-  function handleCheck({ toDoListId, itemId }) {
-    setToDoListList((current) =>
+  function handleCheck({ shoppingListId, itemId }) {
+    setShoppingListList((current) =>
       current.map((list) => {
-        if (list.id === toDoListId) {
+        if (list.id === shoppingListId) {
           return {
             ...list,
             itemList: list.itemList.map((item) =>
@@ -303,7 +303,7 @@ function ToDoListOverviewProvider({ children }) {
   }
   // Item
   const handleUpdateItemName = (listId, itemId, newName) => {
-    setToDoListList((current) =>
+    setShoppingListList((current) =>
       current.map((list) =>
         list.id === listId
           ? {
@@ -320,9 +320,9 @@ function ToDoListOverviewProvider({ children }) {
   // member -add -kick
 
   // Member
-  function handleAddMember({ toDoListId, addMember }) {
-    setToDoListList((current) => {
-      const listIndex = current.findIndex((list) => list.id === toDoListId);
+  function handleAddMember({ shoppingListId, addMember }) {
+    setShoppingListList((current) => {
+      const listIndex = current.findIndex((list) => list.id === shoppingListId);
       if (listIndex !== -1) {
         const updatedList = { ...current[listIndex] };
         updatedList.members.push({ id: addMember.id, name: addMember.name });
@@ -334,10 +334,10 @@ function ToDoListOverviewProvider({ children }) {
     });
   }
   // Member
-  function handleKickMember({ toDoListId, memberId }) {
-    setToDoListList((current) => {
+  function handleKickMember({ shoppingListId, memberId }) {
+    setShoppingListList((current) => {
       return current.map((list) => {
-        if (list.id === toDoListId) {
+        if (list.id === shoppingListId) {
           return {
             ...list,
             members: list.members.filter((member) => member.id !== memberId),
@@ -349,16 +349,16 @@ function ToDoListOverviewProvider({ children }) {
   }
 
   return (
-    <ToDoListContext.Provider
+    <ShoppingListContext.Provider
       value={{
-        toDoListList: filteredtoDoListList,
+        shoppingListList: filteredshoppingListList,
         showArchived,
         setShowArchived,
         showIsDone,
         setShowIsDone,
-        setToDoListList,
-        handleArchiveToDoList,
-        handleDeleteToDoList,
+        setShoppingListList,
+        handleArchiveShoppingList,
+        handleDeleteShoppingList,
         handleCheck,
         handleKickMember,
         handleDeleteItem,
@@ -371,8 +371,8 @@ function ToDoListOverviewProvider({ children }) {
       }}
     >
       {children}
-    </ToDoListContext.Provider>
+    </ShoppingListContext.Provider>
   );
 }
 
-export default ToDoListOverviewProvider;
+export default ShoppingListOverviewProvider;

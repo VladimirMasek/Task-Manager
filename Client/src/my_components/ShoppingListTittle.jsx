@@ -4,7 +4,7 @@ import { mdiPencilOutline, mdiClose, mdiCheck } from "@mdi/js";
 // UI components
 import { HStack, Editable, IconButton } from "@chakra-ui/react";
 
-const ToDoListTittle = ({ list, handleUpdateListName, loggedInUser }) => {
+const ShoppingListTittle = ({ list, handleUpdateListName, loggedInUser }) => {
   return (
     <HStack p="4">
       <Editable.Root
@@ -45,4 +45,4 @@ const ToDoListTittle = ({ list, handleUpdateListName, loggedInUser }) => {
   );
 };
 
-export default ToDoListTittle;
+export default ShoppingListTittle;

@@ -7,9 +7,9 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Provider } from "./components/ui/provider.jsx";
 import { ColorModeProvider } from "./components/ui/color-mode";
 import UserProvider from "./Users/UserProvider.jsx";
-import ToDoListOverviewProvider from "./my_components/ToDoListOverviewProvider.jsx";
+import ShoppingListOverviewProvider from "./my_components/ShoppingListOverviewProvider.jsx";
 // My components
-import ToDoListOverview from "./pages/ToDoListOverview.jsx";
+import ShoppingListOverview from "./pages/ShoppingListOverview.jsx";
 import ShoppingListDetail from "./pages/ShoppingListDetail.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
 // CSS
@@ -19,11 +19,11 @@ import "./main.css";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <ToDoListOverview />,
+    element: <ShoppingListOverview />,
     //errorElement: <NotFoundPage />,
     children: [
       {
-        path: "/:toDoListId",
+        path: "/:shoppingListId",
         element: <ShoppingListDetail />,
       },
     ],
@@ -35,9 +35,9 @@ createRoot(document.getElementById("root")).render(
     <Provider>
       <ColorModeProvider>
         <UserProvider>
-          <ToDoListOverviewProvider>
+          <ShoppingListOverviewProvider>
             <RouterProvider router={router} />
-          </ToDoListOverviewProvider>
+          </ShoppingListOverviewProvider>
         </UserProvider>
       </ColorModeProvider>
     </Provider>

@@ -1,7 +1,7 @@
 // Context providers
 import { useState, useContext } from "react";
 import { UserContext } from "../Users/UserProvider";
-import { ToDoListContext } from "./ToDoListOverviewProvider";
+import { ShoppingListContext } from "./ShoppingListOverviewProvider";
 // React component
 import { Form } from "react-router-dom";
 // Icons
@@ -34,7 +34,7 @@ import { Field } from "../components/ui/field";
 
 const Toolbar = () => {
   const { showArchived, setShowArchived, handleCreateNewList } =
-    useContext(ToDoListContext);
+    useContext(ShoppingListContext);
   const { loggedInUser, userList } = useContext(UserContext);
 
   const [listName, setListName] = useState("");

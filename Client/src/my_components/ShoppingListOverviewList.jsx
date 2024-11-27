@@ -3,14 +3,14 @@ import { useContext } from "react";
 // Router
 import { Outlet, useLocation } from "react-router-dom";
 // Context provider
-import { ToDoListContext } from "./ToDoListOverviewProvider";
+import { ShoppingListContext } from "./ShoppingListOverviewProvider";
 // My components
-import ToDoListOverviewItem from "./ToDoListOverviewItem";
+import ShoppingListOverviewItem from "./ShoppingListOverviewItem";
 // UI components
 import { Grid, GridItem, Box } from "@chakra-ui/react";
 
-const ToDoListOverviewList = () => {
-  const { toDoListList, isMobile } = useContext(ToDoListContext);
+const ShoppingListOverviewList = () => {
+  const { shoppingListList, isMobile } = useContext(ShoppingListContext);
 
   const location = useLocation();
   const isDetailPage = location.pathname !== "/";
@@ -24,10 +24,10 @@ const ToDoListOverviewList = () => {
       {!isMobile || !isDetailPage ? (
         <GridItem colSpan={isMobile ? 1 : 3} h="80vh">
           <Box overflowY="auto" h="100%" pr="10px">
-            {toDoListList.map((toDoListData) => (
-              <ToDoListOverviewItem
-                key={toDoListData.id}
-                toDoListData={toDoListData}
+            {shoppingListList.map((shoppingListData) => (
+              <ShoppingListOverviewItem
+                key={shoppingListData.id}
+                shoppingListData={shoppingListData}
               />
             ))}
           </Box>
@@ -43,4 +43,4 @@ const ToDoListOverviewList = () => {
   );
 };
 
-export default ToDoListOverviewList;
+export default ShoppingListOverviewList;

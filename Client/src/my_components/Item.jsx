@@ -1,6 +1,6 @@
 // Context provider
 import { useContext } from "react";
-import { ToDoListContext } from "./ToDoListOverviewProvider";
+import { ShoppingListContext } from "./ShoppingListOverviewProvider";
 // Icons
 import Icon from "@mdi/react";
 import {
@@ -14,7 +14,7 @@ import { Tooltip } from "../components/ui/tooltip";
 
 const Item = ({ item, selectedList }) => {
   const { handleCheck, handleDeleteItem, handleUpdateItemName } =
-    useContext(ToDoListContext);
+    useContext(ShoppingListContext);
 
   return (
     <HStack key={item.id}>
@@ -22,7 +22,7 @@ const Item = ({ item, selectedList }) => {
         variant="ghost"
         onClick={() =>
           handleCheck({
-            toDoListId: selectedList.id,
+            shoppingListId: selectedList.id,
             itemId: item.id,
           })
         }
@@ -59,7 +59,7 @@ const Item = ({ item, selectedList }) => {
         variant="subtle"
         onClick={() =>
           handleDeleteItem({
-            toDoListId: selectedList.id,
+            shoppingListId: selectedList.id,
             itemId: item.id,
           })
         }

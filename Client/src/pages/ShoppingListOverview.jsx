@@ -1,20 +1,20 @@
 // My components
 import Header from "../my_components/Header";
-import ToDoListOverviewList from "../my_components/ToDoListOverviewList";
+import ShoppingListOverviewList from "../my_components/ShoppingListOverviewList";
 import Toolbar from "../my_components/Toolbar";
 // UI components
 import { VStack, Center } from "@chakra-ui/react";
 
-const ToDoListOverview = () => {
+const ShoppingListOverview = () => {
   return (
     <Center>
       <VStack width="80%">
         <Header />
         <Toolbar />
-        <ToDoListOverviewList />
+        <ShoppingListOverviewList />
       </VStack>
     </Center>
   );
 };
 
-export default ToDoListOverview;
+export default ShoppingListOverview;

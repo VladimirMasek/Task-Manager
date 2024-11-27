@@ -1,6 +1,6 @@
 // Context provider
 import { useContext } from "react";
-import { ToDoListContext } from "../my_components/ToDoListOverviewProvider";
+import { ShoppingListContext } from "../my_components/ShoppingListOverviewProvider";
 // Icons
 import Icon from "@mdi/react";
 import { mdiLogout } from "@mdi/js";
@@ -9,7 +9,7 @@ import { Button, HStack, Spacer, Text } from "@chakra-ui/react";
 import { Avatar } from "../components/ui/avatar";
 
 const Member = ({ member, isMember, selectedList, loggedInUser }) => {
-  const { handleKickMember, handleAddMember } = useContext(ToDoListContext);
+  const { handleKickMember, handleAddMember } = useContext(ShoppingListContext);
 
   return (
     <>
@@ -25,7 +25,7 @@ const Member = ({ member, isMember, selectedList, loggedInUser }) => {
               colorPalette="red"
               onClick={() =>
                 handleKickMember({
-                  toDoListId: selectedList.id,
+                  shoppingListId: selectedList.id,
                   memberId: member.id,
                 })
               }
@@ -42,7 +42,7 @@ const Member = ({ member, isMember, selectedList, loggedInUser }) => {
             colorPalette="green"
             onClick={() =>
               handleAddMember({
-                toDoListId: selectedList.id,
+                shoppingListId: selectedList.id,
                 addMember: member,
               })
             }
