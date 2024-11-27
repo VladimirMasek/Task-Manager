@@ -23,7 +23,7 @@ const ToDoListOverviewList = () => {
     >
       {!isMobile || !isDetailPage ? (
         <GridItem colSpan={isMobile ? 1 : 3} h="80vh">
-          <Box overflowY="auto" h="100%">
+          <Box overflowY="auto" h="100%" pr="10px">
             {toDoListList.map((toDoListData) => (
               <ToDoListOverviewItem
                 key={toDoListData.id}

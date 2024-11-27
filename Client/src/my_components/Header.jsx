@@ -15,6 +15,7 @@ import {
   MenuRoot,
   MenuTrigger,
 } from "../components/ui/menu";
+import { ColorModeButton } from "../components/ui/color-mode.jsx";
 
 const Header = () => {
   const { loggedInUser, userList, setLoggedInUser } = useContext(UserContext);
@@ -25,6 +26,7 @@ const Header = () => {
         <Heading size="4xl">Task Manager</Heading>
       </NavLink>
       <Spacer />
+      <ColorModeButton />
       <Text hideBelow="md">{loggedInUser.name}</Text>
       <MenuRoot positioning={{ placement: "right-start" }}>
         <MenuTrigger asChild>

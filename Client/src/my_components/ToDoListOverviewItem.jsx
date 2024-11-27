@@ -44,7 +44,10 @@ const ToDoListOverviewItem = ({ toDoListData }) => {
     <>
       <Card.Root
         w="100%"
-        bg={toDoListData.archived ? "gray.200" : ""}
+        bg={{
+          base: toDoListData.archived ? "gray.200" : "white",
+          _dark: toDoListData.archived ? "cyan.950" : "black",
+        }}
         mb="10px"
       >
         <Card.Body>

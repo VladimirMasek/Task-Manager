@@ -5,6 +5,7 @@ import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 // Context providers
 import { Provider } from "./components/ui/provider.jsx";
+import { ColorModeProvider } from "./components/ui/color-mode";
 import UserProvider from "./Users/UserProvider.jsx";
 import ToDoListOverviewProvider from "./my_components/ToDoListOverviewProvider.jsx";
 // My components
@@ -32,11 +33,13 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider>
-      <UserProvider>
-        <ToDoListOverviewProvider>
-          <RouterProvider router={router} />
-        </ToDoListOverviewProvider>
-      </UserProvider>
+      <ColorModeProvider>
+        <UserProvider>
+          <ToDoListOverviewProvider>
+            <RouterProvider router={router} />
+          </ToDoListOverviewProvider>
+        </UserProvider>
+      </ColorModeProvider>
     </Provider>
   </StrictMode>
 );
