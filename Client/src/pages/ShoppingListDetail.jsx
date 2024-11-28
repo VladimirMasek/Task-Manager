@@ -21,13 +21,13 @@ import {
   Card,
   Grid,
   GridItem,
-  Stack,
   Text,
   Box,
   Button,
   Link,
   Tabs,
   Spacer,
+  HStack,
 } from "@chakra-ui/react";
 // Language switcher
 import { useTranslation } from "react-i18next";
@@ -62,6 +62,7 @@ const ShoppingListDetail = () => {
     <Box w="100%" h="80vh">
       <Card.Root w="100%" h="100%" overflowY="auto">
         <Tabs.Root defaultValue="members">
+          {/* Tabs Header */}
           <Card.Header>
             <Tabs.List>
               <Tabs.Trigger value="items" asChild>
@@ -81,53 +82,47 @@ const ShoppingListDetail = () => {
               </Tabs.Trigger>
             </Tabs.List>
           </Card.Header>
-          <Card.Body>
-            <Grid width="100%" templateColumns="repeat(7, 1fr)" gap="6">
-              <GridItem colSpan={{ lgDown: 7, base: 5 }}>
-                <Tabs.Content value="items">
-                  <ItemList
-                    selectedList={selectedList}
-                    showIsDone={showIsDone}
-                  />
-                </Tabs.Content>
-                <Tabs.Content value="members">
-                  <MemberList
-                    selectedList={selectedList}
-                    loggedInUser={loggedInUser}
-                    userList={userList}
-                  />
-                </Tabs.Content>
-              </GridItem>
 
-              <GridItem colSpan={{ lgDown: 7, base: 2 }}>
-                <Stack direction={{ lgDown: "row", base: "column" }}>
-                  <Button
-                    variant="subtle"
-                    onClick={() => setShowIsDone(!showIsDone)}
-                  >
-                    <Icon
-                      path={showIsDone ? mdiFilterOutline : mdiFilterOffOutline}
-                      size={1}
-                    />
-                    <Text hideBelow="sm">
-                      {t("shoppingListDetail.filterButton")}
-                    </Text>
-                  </Button>
-                  <Spacer hideFrom="xl" />
-                  <Button
-                    variant="subtle"
-                    onClick={() =>
-                      handleAddItem({ shoppingListId: selectedList.id })
-                    }
-                  >
-                    <Icon path={mdiPlusCircleOutline} size={1} />
-                    <Text hideBelow="sm">
-                      {t("shoppingListDetail.createButton")}
-                    </Text>
-                  </Button>
-                </Stack>
-              </GridItem>
-            </Grid>
+          {/* Tabs Content */}
+          <Card.Body>
+            <Tabs.Content value="items">
+              {/* Actions Section */}
+              <HStack mb="15px">
+                <Button
+                  variant="subtle"
+                  onClick={() => setShowIsDone(!showIsDone)}
+                >
+                  <Icon
+                    path={showIsDone ? mdiFilterOutline : mdiFilterOffOutline}
+                    size={1}
+                  />
+                  <Text hideBelow="sm">
+                    {t("shoppingListDetail.filterButton")}
+                  </Text>
+                </Button>
+                <Spacer />
+                <Button
+                  variant="subtle"
+                  onClick={() =>
+                    handleAddItem({ shoppingListId: selectedList.id })
+                  }
+                >
+                  <Icon path={mdiPlusCircleOutline} size={1} />
+                  <Text hideBelow="sm">
+                    {t("shoppingListDetail.createButton")}
+                  </Text>
+                </Button>
+              </HStack>
+              {/* ItemList Section */}
+              <ItemList selectedList={selectedList} showIsDone={showIsDone} />
+            </Tabs.Content>
+            <Tabs.Content value="members">
+              <MemberList
+                selectedList={selectedList}
+                loggedInUser={loggedInUser}
+                userList={userList}
+              />
+            </Tabs.Content>
           </Card.Body>
         </Tabs.Root>
       </Card.Root>
