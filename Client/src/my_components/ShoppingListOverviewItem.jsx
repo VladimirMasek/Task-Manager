@@ -34,11 +34,14 @@ import {
   ProgressCircleRoot,
   ProgressCircleValueText,
 } from "../components/ui/progress-circle.jsx";
+// Language switcher
+import { useTranslation } from "react-i18next";
 
 const ShoppingListOverviewItem = ({ shoppingListData }) => {
   const { loggedInUser } = useContext(UserContext);
   const { handleArchiveShoppingList, handleDeleteShoppingList, isMobile } =
     useContext(ShoppingListContext);
+  const { t } = useTranslation();
 
   return (
     <>
@@ -58,7 +61,10 @@ const ShoppingListOverviewItem = ({ shoppingListData }) => {
           >
             <GridItem colSpan={5} rowSpan={3}>
               <Stack>
-                <NavLink key={shoppingListData.id} to={`/${shoppingListData.id}`}>
+                <NavLink
+                  key={shoppingListData.id}
+                  to={`/${shoppingListData.id}`}
+                >
                   <Heading>{shoppingListData.name}</Heading>
                 </NavLink>
                 <Text>{shoppingListData.owner.name}</Text>
@@ -111,7 +117,9 @@ const ShoppingListOverviewItem = ({ shoppingListData }) => {
                         <IconButton variant="subtle">
                           <Icon
                             onClick={() =>
-                              handleArchiveShoppingList({ id: shoppingListData.id })
+                              handleArchiveShoppingList({
+                                id: shoppingListData.id,
+                              })
                             }
                             path={mdiArchiveOutline}
                             size={1}
@@ -124,17 +132,16 @@ const ShoppingListOverviewItem = ({ shoppingListData }) => {
 
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle>Are you sure?</DialogTitle>
+                    <DialogTitle>{t("deleteDialog.tittle")}</DialogTitle>
                   </DialogHeader>
                   <DialogBody>
-                    <Text>
-                      This action cannot be undone. This will permanently delete
-                      this shopping list.
-                    </Text>
+                    <Text>{t("deleteDialog.text")}</Text>
                   </DialogBody>
                   <DialogFooter>
                     <DialogActionTrigger asChild>
-                      <Button variant="outline">Cancel</Button>
+                      <Button variant="outline">
+                        {t("deleteDialog.cancelButton")}
+                      </Button>
                     </DialogActionTrigger>
                     <Button
                       colorPalette="red"
@@ -144,7 +151,7 @@ const ShoppingListOverviewItem = ({ shoppingListData }) => {
                         })
                       }
                     >
-                      Delete
+                      {t("deleteDialog.deleteButton")}
                     </Button>
                   </DialogFooter>
                   <DialogCloseTrigger />

@@ -29,10 +29,13 @@ import {
   Tabs,
   Spacer,
 } from "@chakra-ui/react";
+// Language switcher
+import { useTranslation } from "react-i18next";
 
 const ShoppingListDetail = () => {
   const params = useParams();
   const shoppingListId = parseInt(params.shoppingListId);
+  const { t } = useTranslation();
 
   const {
     shoppingListList,
@@ -42,11 +45,13 @@ const ShoppingListDetail = () => {
     handleUpdateListName,
   } = useContext(ShoppingListContext);
 
-  const selectedList = shoppingListList.find((list) => list.id === shoppingListId);
+  const selectedList = shoppingListList.find(
+    (list) => list.id === shoppingListId
+  );
   if (!selectedList) {
     return (
       <Box>
-        <Text>Shopping list not found!</Text>
+        <Text>{t("shoppingListDetail.noList")}</Text>
       </Box>
     );
   }
@@ -70,7 +75,7 @@ const ShoppingListDetail = () => {
               </Tabs.Trigger>
               <Tabs.Trigger value="members" asChild>
                 <Link unstyled href="#members">
-                  <Text hideBelow="md">Members</Text>
+                  <Text hideBelow="md">{t("shoppingListDetail.members")}</Text>
                   <Icon path={mdiAccountMultiple} size={1} />
                 </Link>
               </Tabs.Trigger>
@@ -104,7 +109,9 @@ const ShoppingListDetail = () => {
                       path={showIsDone ? mdiFilterOutline : mdiFilterOffOutline}
                       size={1}
                     />
-                    <Text hideBelow="sm">Filter items</Text>
+                    <Text hideBelow="sm">
+                      {t("shoppingListDetail.filterButton")}
+                    </Text>
                   </Button>
                   <Spacer hideFrom="xl" />
                   <Button
@@ -114,7 +121,9 @@ const ShoppingListDetail = () => {
                     }
                   >
                     <Icon path={mdiPlusCircleOutline} size={1} />
-                    <Text hideBelow="sm">Create item</Text>
+                    <Text hideBelow="sm">
+                      {t("shoppingListDetail.createButton")}
+                    </Text>
                   </Button>
                 </Stack>
               </GridItem>

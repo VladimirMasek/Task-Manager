@@ -11,10 +11,13 @@ import {
 // UI components
 import { Editable, HStack, IconButton, Spacer } from "@chakra-ui/react";
 import { Tooltip } from "../components/ui/tooltip";
+// Language switcher
+import { useTranslation } from "react-i18next";
 
 const Item = ({ item, selectedList }) => {
   const { handleCheck, handleDeleteItem, handleUpdateItemName } =
     useContext(ShoppingListContext);
+  const { t } = useTranslation();
 
   return (
     <HStack key={item.id}>
@@ -34,12 +37,7 @@ const Item = ({ item, selectedList }) => {
           size={1}
         />
       </IconButton>
-      <Tooltip
-        content="Double click to edit"
-        positioning={{
-          offset: { mainAxis: 4, crossAxis: 4 },
-        }}
-      >
+      <Tooltip content={t("item.tooltip")}>
         <Editable.Root
           key={item.id}
           fontSize={{ mdDown: "xs", base: "md" }}

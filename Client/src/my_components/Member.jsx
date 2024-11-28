@@ -7,9 +7,12 @@ import { mdiLogout } from "@mdi/js";
 // UI components
 import { Button, HStack, Spacer, Text } from "@chakra-ui/react";
 import { Avatar } from "../components/ui/avatar";
+// Language switcher
+import { useTranslation } from "react-i18next";
 
 const Member = ({ member, isMember, selectedList, loggedInUser }) => {
   const { handleKickMember, handleAddMember } = useContext(ShoppingListContext);
+  const { t } = useTranslation();
 
   return (
     <>
@@ -32,7 +35,9 @@ const Member = ({ member, isMember, selectedList, loggedInUser }) => {
             >
               <Icon path={mdiLogout} size={1} />
               <Text>
-                {selectedList.owner.id === loggedInUser.id ? "Kick" : "Leave"}
+                {selectedList.owner.id === loggedInUser.id
+                  ? `${t("member.kick")}`
+                  : `${t("member.leave")}`}
               </Text>
             </Button>
           )
@@ -47,7 +52,7 @@ const Member = ({ member, isMember, selectedList, loggedInUser }) => {
               })
             }
           >
-            <Text>Add</Text>
+            <Text>{t("member.add")}</Text>
           </Button>
         )}
       </HStack>

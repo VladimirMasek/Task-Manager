@@ -3,6 +3,8 @@ import Member from "./Member.jsx";
 // UI components
 import { Badge, Box, HStack, Text } from "@chakra-ui/react";
 import { Avatar } from "../components/ui/avatar";
+// Language switcher
+import { useTranslation } from "react-i18next";
 
 const MemberList = ({ selectedList, loggedInUser, userList }) => {
   const nonMembers = userList.filter(
@@ -10,10 +12,11 @@ const MemberList = ({ selectedList, loggedInUser, userList }) => {
       !selectedList.members.some((member) => member.id === user.id) &&
       user.id !== selectedList.owner.id
   );
+  const { t } = useTranslation();
 
   return (
     <Box>
-      <Text>Owner</Text>
+      <Text>{t("memberList.owner")}</Text>
       <HStack mb="20px">
         <Badge colorPalette="purple">
           <Avatar key={selectedList.owner.id} name={selectedList.owner.name} />
@@ -21,7 +24,9 @@ const MemberList = ({ selectedList, loggedInUser, userList }) => {
         </Badge>
       </HStack>
 
-      {selectedList.members.length === 0 ? null : <Text>Members</Text>}
+      {selectedList.members.length === 0 ? null : (
+        <Text>{t("memberList.members")}</Text>
+      )}
       {selectedList.members.map((member) => (
         <Member
           key={member.id}
@@ -34,7 +39,9 @@ const MemberList = ({ selectedList, loggedInUser, userList }) => {
 
       {loggedInUser.id === selectedList.owner.id ? (
         <Box mt="40px">
-          {nonMembers.length === 0 ? null : <Text>Add Users</Text>}
+          {nonMembers.length === 0 ? null : (
+            <Text>{t("memberList.addUsers")}</Text>
+          )}
 
           {nonMembers.map((nonMember) => (
             <Member

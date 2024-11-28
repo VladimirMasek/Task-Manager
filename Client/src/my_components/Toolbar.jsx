@@ -31,8 +31,11 @@ import {
 } from "../components/ui/dialog";
 import { Avatar } from "../components/ui/avatar";
 import { Field } from "../components/ui/field";
+// Language switcher
+import { useTranslation } from "react-i18next";
 
 const Toolbar = () => {
+  const { t } = useTranslation();
   const { showArchived, setShowArchived, handleCreateNewList } =
     useContext(ShoppingListContext);
   const { loggedInUser, userList } = useContext(UserContext);
@@ -83,7 +86,9 @@ const Toolbar = () => {
         <Button variant="subtle" onClick={() => setShowArchived(!showArchived)}>
           <Icon path={showArchived ? mdiEyeOff : mdiEye} size={1} />
           <Text textStyle="xl" hideBelow="md">
-            {showArchived ? "Hide archived" : "Show archived"}
+            {showArchived
+              ? `${t("toolbar.hideArchived")}`
+              : `${t("toolbar.showArchived")}`}
           </Text>
         </Button>
 
@@ -92,7 +97,7 @@ const Toolbar = () => {
           <Button variant="subtle">
             <Icon path={mdiPlusCircleOutline} size={1} />
             <Text textStyle="xl" hideBelow="md">
-              Create new list
+              {t("toolbar.createList")}
             </Text>
           </Button>
         </DialogTrigger>
@@ -100,12 +105,16 @@ const Toolbar = () => {
 
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create New Shopping List</DialogTitle>
+          <DialogTitle>{t("createDialog.createList")}</DialogTitle>
         </DialogHeader>
         <Form onSubmit={onSubmit}>
           <DialogBody pb="4">
             <Stack gap="4" align="flex-start" maxW="sm">
-              <Field label="List Name" invalid={!!error} errorText={error}>
+              <Field
+                label={t("createDialog.inputLabel")}
+                invalid={!!error}
+                errorText={error}
+              >
                 <Input
                   value={listName}
                   onChange={(e) => {
@@ -118,7 +127,9 @@ const Toolbar = () => {
               </Field>
             </Stack>
 
-            {addedUsers.length === 0 ? null : <Text>Members</Text>}
+            {addedUsers.length === 0 ? null : (
+              <Text>{t("createDialog.members")}</Text>
+            )}
 
             {addedUsers.map((addeduser) => (
               <HStack key={addeduser.id} mb="2px">
@@ -132,13 +143,15 @@ const Toolbar = () => {
                     handleRemoveUser({ addeduserId: addeduser.id })
                   }
                 >
-                  <Text>Remove</Text>
+                  <Text>{t("createDialog.removeButton")}</Text>
                 </Button>
               </HStack>
             ))}
 
             <Box mt="40px">
-              {nonAddedUsers.length === 0 ? null : <Text>Add Users</Text>}
+              {nonAddedUsers.length === 0 ? null : (
+                <Text>{t("createDialog.addUsers")}</Text>
+              )}
               {nonAddedUsers.map((user) => (
                 <HStack key={user.id} mb="2px">
                   <Avatar name={user.name} />
@@ -149,7 +162,7 @@ const Toolbar = () => {
                     colorPalette="green"
                     onClick={() => handleAddUser({ user })}
                   >
-                    <Text>Add</Text>
+                    <Text>{t("createDialog.addButton")}</Text>
                   </Button>
                 </HStack>
               ))}
@@ -158,7 +171,7 @@ const Toolbar = () => {
           <DialogFooter>
             <DialogActionTrigger asChild>
               <Button type="submit" disabled={!listName.trim()}>
-                Create List
+                {t("createDialog.createButton")}
               </Button>
             </DialogActionTrigger>
           </DialogFooter>

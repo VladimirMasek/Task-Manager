@@ -14,7 +14,8 @@ import ShoppingListDetail from "./pages/ShoppingListDetail.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
 // CSS
 import "./main.css";
-//import "./i18n"
+// i18next
+import "./i18n";
 
 const router = createBrowserRouter([
   {
