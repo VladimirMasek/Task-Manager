@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 // Context provider
 import { useContext } from "react";
 import { UserContext } from "../Users/UserProvider.jsx";
+import { ShoppingListContext } from "./ShoppingListOverviewProvider";
 //Icons
 import Icon from "@mdi/react";
 import { mdiLogout } from "@mdi/js";
@@ -21,6 +22,7 @@ import { useTranslation } from "react-i18next";
 
 const Header = () => {
   const { loggedInUser, userList, setLoggedInUser } = useContext(UserContext);
+  const { isMobile } = useContext(ShoppingListContext);
   const { t, i18n } = useTranslation();
   const lngs = {
     en: { nativeName: "English", shortName: "en" },
@@ -30,7 +32,11 @@ const Header = () => {
   return (
     <HStack w="100%" h="10vh">
       <NavLink to={"/"}>
-        <Heading size="4xl">{t("header.appName")}</Heading>
+        <Heading size={{ lgDown: "3xl", base: "4xl" }}>
+          {isMobile
+            ? `${t("header.appNameShort")}`
+            : `${t("header.appNameLong")}`}
+        </Heading>
       </NavLink>
       <Spacer />
       <MenuRoot>
