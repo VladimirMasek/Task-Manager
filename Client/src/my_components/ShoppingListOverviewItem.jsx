@@ -1,5 +1,5 @@
 //Router
-import { NavLink } from "react-router-dom";
+import { NavLink, useMatch } from "react-router-dom";
 // Context providers
 import { useContext } from "react";
 import { UserContext } from "../Users/UserProvider.jsx";
@@ -43,15 +43,25 @@ const ShoppingListOverviewItem = ({ shoppingListData }) => {
     useContext(ShoppingListContext);
   const { t } = useTranslation();
 
+  const isActive = useMatch(`/${shoppingListData.id}`);
+
   return (
     <>
       <Card.Root
         w="100%"
-        bg={{
-          base: shoppingListData.archived ? "gray.200" : "white",
-          _dark: shoppingListData.archived ? "cyan.950" : "black",
+        bg={shoppingListData.archived ? "bg.emphasized" : "bg.subtle"}
+        mt={isActive ? "5px" : "6px"}
+        mb={isActive ? "5px" : "6px"}
+        pr={isActive ? "0px" : "1px"}
+        pl={isActive ? "0px" : "1px"}
+        borderWidth={isActive ? "2px" : "1px"}
+        borderColor={isActive ? "border.inverted" : "border.muted"}
+        _hover={{
+          borderColor: {
+            base: isActive ? "gray.500" : "border",
+            _dark: isActive ? "gray.400" : "border",
+          },
         }}
-        mb="10px"
       >
         <Card.Body>
           <Grid
