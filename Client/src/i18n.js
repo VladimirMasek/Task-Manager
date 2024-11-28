@@ -21,7 +21,8 @@ i18n
       en: {
         translation: {
           header: {
-            appName: "ShoppingList Manager",
+            appNameLong: "ShoppingList Manager",
+            appNameShort: "SLM",
             date: "Today is {{date, DATE_SHORT}}",
           },
           item: {
@@ -38,7 +39,7 @@ i18n
             addUsers: "Add Users",
           },
           deleteDialog: {
-            tittle: "Are you sure?",
+            tittle: "Are you sure you want to delete this list?",
             text: "This action cannot be undone. This will permanently delete this shopping list.",
             cancelButton: "Cancel",
             deleteButton: "Delete",
@@ -76,7 +77,8 @@ i18n
       cs: {
         translation: {
           header: {
-            appName: "Správce nákupních seznamů",
+            appNameLong: "Správce nákupních seznamů",
+            appNameShort: "SNS",
             date: "Dnes je {{date, DATE_SHORT}}",
           },
           item: {
@@ -93,7 +95,7 @@ i18n
             addUsers: "Přidat členy",
           },
           deleteDialog: {
-            tittle: "Opravdu chcete?",
+            tittle: "Opravdu chcete smazat tento seznam?",
             text: "Tuto akci nelze vrátit zpět. Tento nákupní seznam bude trvale smazán.",
             cancelButton: "Zrušit",
             deleteButton: "Vymazat",
