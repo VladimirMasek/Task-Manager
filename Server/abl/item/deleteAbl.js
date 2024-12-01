@@ -19,7 +19,7 @@ async function DeleteAbl(req, res) {
       return;
     }
 
-    const result = itemDao.remove({
+    const result = await itemDao.remove({
       listId: value.listId,
       itemId: value.itemId,
     });

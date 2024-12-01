@@ -1,16 +1,9 @@
 const Joi = require("joi");
-const shoppingListDao = require("../../dao/shoppingList-dao.js");
+const itemDao = require("../../dao/item-dao.js");
 
 const schema = Joi.object({
   listId: Joi.string().required(),
-  name: Joi.string().required(),
-  members: Joi.array()
-    .items(
-      Joi.object({
-        id: Joi.string().required(),
-      })
-    )
-    .required(),
+  itemId: Joi.string().required(),
 });
 
 async function UpdateAbl(req, res) {
@@ -18,18 +11,19 @@ async function UpdateAbl(req, res) {
     const { error, value } = schema.validate(req.body, { abortEarly: false });
 
     if (error) {
-      res.status(400).json({
+      return res.status(400).json({
         code: "dtoInIsNotValid",
         message: "dtoIn is not valid",
         validationError: error.details,
       });
-      return;
     }
 
-    const result = await shoppingListDao.update({
-      list: value,
+    const solvedItem = await itemDao.solve({
+      listId: value.listId,
+      itemId: value.itemId,
     });
-    res.json({ success: result });
+
+    res.json(solvedItem);
   } catch (e) {
     res.status(500).json({ message: e.message });
   }

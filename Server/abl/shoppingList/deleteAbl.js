@@ -18,7 +18,7 @@ async function DeleteAbl(req, res) {
       return;
     }
 
-    const result = shoppingListDao.remove({
+    const result = await shoppingListDao.remove({
       listId: value.listId,
     });
     res.json({ success: result });

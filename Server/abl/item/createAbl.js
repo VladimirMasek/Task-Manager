@@ -21,7 +21,7 @@ async function CreateAbl(req, res) {
       return;
     }
 
-    const createdItem = itemDao.create({
+    const createdItem = await itemDao.create({
       listId: value.listId,
       item: value.item,
     });

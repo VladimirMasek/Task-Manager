@@ -11,8 +11,6 @@ const schema = Joi.object({
 });
 
 async function UpdateAbl(req, res) {
-  console.log("Incoming request body:", req.body);
-
   try {
     const { error, value } = schema.validate(req.body, { abortEarly: false });
 
@@ -24,7 +22,7 @@ async function UpdateAbl(req, res) {
       });
     }
 
-    const updatedItem = itemDao.update({
+    const updatedItem = await itemDao.update({
       listId: value.listId,
       item: value.item,
     });

@@ -3,6 +3,7 @@ const shoppingListDao = require("../../dao/shoppingList-dao.js");
 
 const schema = Joi.object({
   name: Joi.string().required(),
+  ownerId: Joi.string().required(),
   members: Joi.array()
     .items(
       Joi.object({
@@ -25,8 +26,10 @@ async function CreateAbl(req, res) {
       return;
     }
 
-    const createdList = shoppingListDao.create({
-      list: value,
+    const createdList = await shoppingListDao.create({
+      listName: value.name,
+      listOwnerId: value.ownerId,
+      listMembers: value.members,
     });
     res.json({ createdList });
   } catch (e) {

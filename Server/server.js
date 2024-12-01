@@ -1,6 +1,17 @@
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 
+const mongoose = require("mongoose");
+
+mongoose
+  .connect("mongodb://localhost:27017/data")
+  .then(() => {
+    console.log("Connected to MongoDB successfully.");
+  })
+  .catch((error) => {
+    console.error("Error connecting to MongoDB:", error);
+  });
+
 const express = require("express");
 const app = express();
 

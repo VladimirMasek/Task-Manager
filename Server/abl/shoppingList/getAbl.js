@@ -10,20 +10,29 @@ async function GetAbl(req, res) {
     const { error, value } = schema.validate(req.body, { abortEarly: false });
 
     if (error) {
-      res.status(400).json({
+      return res.status(400).json({
         code: "dtoInIsNotValid",
-        message: "dtoIn is not valid",
-        validationError: error.details,
+        message: "Input is not valid",
+        validationErrors: error.details.map((detail) => detail.message),
       });
-      return;
     }
 
-    const shoppingList = shoppingListDao.get({
-      listId: value.listId,
-    });
-    res.json({ shoppingList });
+    const shoppingList = await shoppingListDao.get({ listId: value.listId });
+
+    if (!shoppingList) {
+      return res.status(404).json({
+        code: "listNotFound",
+        message: `Shopping list with ID ${value.listId} not found.`,
+      });
+    }
+
+    res.status(200).json({ shoppingList });
   } catch (e) {
-    res.status(500).json({ message: e.message });
+    const statusCode = e.statusCode || 500;
+    res.status(statusCode).json({
+      code: e.code || "unexpectedError",
+      message: e.message || "An unexpected error occurred.",
+    });
   }
 }
 
