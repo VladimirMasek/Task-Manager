@@ -1,70 +1,122 @@
-function create({ list }) {
+const ShoppingList = require("../models/shoppingList");
+const crypto = require("crypto");
+
+async function create({ listName, listOwnerId, listMembers }) {
   try {
-    const generateHexId = () => {
-      return Math.floor(Math.random() * 0xffffff)
-        .toString(16)
-        .padStart(6, "0");
-    };
-
-    const newList = {
-      id: generateHexId(),
-      name: list.name,
-      owner: {
-        id: generateHexId(),
-      },
-      members: list.members,
+    const newList = new ShoppingList({
+      name: listName,
+      ownerId: listOwnerId,
+      members: listMembers || [],
       archived: false,
-    };
+      dateOfCreation: new Date(),
+      itemList: [],
+    });
 
-    return newList;
+    const savedList = await newList.save();
+    return savedList;
   } catch (error) {
-    throw { code: "failedToCreateList", message: error.message };
+    if (error.code === 11000) {
+      throw {
+        code: "duplicateKeyError",
+        message: "List ID already exists.",
+        statusCode: 400,
+      };
+    }
+    throw {
+      code: "failedToCreateList",
+      message: error.message,
+      statusCode: 500,
+    };
   }
 }
 
-function remove({ listId }) {
+async function remove({ listId }) {
   try {
+    const result = await ShoppingList.deleteOne({ id: listId });
+    if (result.deletedCount === 0) {
+      throw {
+        code: "listNotFound",
+        message: "List not found or already deleted.",
+        statusCode: 404,
+      };
+    }
     return true;
   } catch (error) {
-    throw { code: "failedToRemoveList", message: error.message };
+    throw {
+      code: "failedToRemoveList",
+      message: error.message,
+      statusCode: 500,
+    };
   }
 }
 
-function update({ list }) {
+async function update({ list }) {
   try {
-    const updatedList = {
-      listId: list.listId,
-      name: list.name,
-      members: list.members,
-    };
+    const updatedList = await ShoppingList.findOneAndUpdate(
+      { id: list.listId },
+      { name: list.name, members: list.members },
+      { new: true }
+    );
+
+    if (!updatedList) {
+      throw {
+        code: "listNotFound",
+        message: "List not found.",
+        statusCode: 404,
+      };
+    }
 
     return updatedList;
   } catch (error) {
-    throw { code: "failedToUpdateList", message: error.message };
+    throw {
+      code: "failedToUpdateList",
+      message: error.message,
+      statusCode: 500,
+    };
   }
 }
 
-function archive({ listId }) {
+async function archive({ listId }) {
   try {
-    return true;
+    const updatedList = await ShoppingList.findOneAndUpdate(
+      { id: listId },
+      { archived: true },
+      { new: true }
+    );
+
+    if (!updatedList) {
+      throw {
+        code: "listNotFound",
+        message: "List not found.",
+        statusCode: 404,
+      };
+    }
+
+    return updatedList;
   } catch (error) {
-    throw { code: "failedToArchiveList", message: error.message };
+    throw {
+      code: "failedToArchiveList",
+      message: error.message,
+      statusCode: 500,
+    };
   }
 }
 
-function list() {
+async function list() {
   try {
-    return [];
+    const allLists = await ShoppingList.find();
+    return allLists;
   } catch (error) {
-    throw { code: "failedToGetLists", message: error.message };
+    throw { code: "failedToGetLists", message: error.message, statusCode: 500 };
   }
 }
 
-function get({ listId }) {
+async function get({ listId }) {
   try {
-    return {};
+    const list = await ShoppingList.findOne({ id: listId });
+    return list;
   } catch (error) {
-    throw { code: "failedToGetList", message: error.message };
+    throw { code: "failedToGetList", message: error.message, statusCode: 500 };
   }
 }
 
