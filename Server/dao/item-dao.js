@@ -34,10 +34,17 @@ async function create({ listId, item }) {
 }
 
 async function remove({ listId, itemId }) {
+  if (!itemId) {
+    throw {
+      code: "invalidItemStructure",
+      message: "'itemId' is required.",
+    };
+  }
+
   try {
     const updatedList = await List.findByIdAndUpdate(
       listId,
-      { $pull: { itemList: { id: itemId } } },
+      { $pull: { itemList: { _id: itemId } } },
       { new: true }
     );
 
@@ -45,9 +52,11 @@ async function remove({ listId, itemId }) {
       throw { code: "listNotFound", message: "List not found." };
     }
 
-    const itemRemoved = updatedList.itemList.find((item) => item.id === itemId);
+    const itemStillExists = updatedList.itemList.some(
+      (item) => item.id === itemId
+    );
 
-    if (itemRemoved) {
+    if (itemStillExists) {
       throw { code: "itemNotRemoved", message: "Failed to remove item." };
     }
 
@@ -69,26 +78,24 @@ async function update({ listId, item }) {
   }
 
   try {
-    const updatedList = await List.findOneAndUpdate(
-      { id: listId, "itemList.id": item.id },
-      {
-        $set: {
-          "itemList.$.name": item.name,
-          "itemList.$.isDone": item.isDone,
-        },
-      },
-      { new: true }
-    );
+    const list = await List.findById(listId);
 
-    if (!updatedList) {
-      throw { code: "listNotFound", message: "List or item not found." };
+    if (!list) {
+      throw { code: "listNotFound", message: "List not found." };
     }
 
-    const updatedItem = updatedList.itemList.find(
+    const itemIndex = list.itemList.findIndex(
       (listItem) => listItem.id === item.id
     );
 
-    return updatedItem;
+    if (itemIndex === -1) {
+      throw { code: "itemNotFound", message: "Item not found." };
+    }
+    list.itemList[itemIndex].name = item.name;
+    list.itemList[itemIndex].isDone = item.isDone;
+    const updatedList = await list.save();
+
+    return updatedList.itemList[itemIndex];
   } catch (error) {
     throw {
       code: "failedToUpdateItem",
@@ -98,33 +105,31 @@ async function update({ listId, item }) {
 }
 
 async function solve({ listId, itemId }) {
-  try {
-    const updatedList = await List.findOne({
-      id: listId,
-      "itemList.id": itemId,
-    });
+  if (!itemId) {
+    throw {
+      code: "invalidItemStructure",
+      message: "'itemId' is required.",
+    };
+  }
 
-    if (!updatedList) {
-      throw { code: "listNotFound", message: "List or item not found." };
+  try {
+    const list = await List.findById(listId);
+
+    if (!list) {
+      throw { code: "listNotFound", message: "List not found." };
     }
-    const item = updatedList.itemList.find((item) => item.id === itemId);
+
+    const item = list.itemList.find((item) => item.id === itemId);
+
+    if (!item) {
+      throw { code: "itemNotFound", message: "Item not found." };
+    }
+
     item.isDone = !item.isDone;
 
-    const updatedListWithItem = await List.findOneAndUpdate(
-      { id: listId, "itemList.id": itemId },
-      {
-        $set: {
-          "itemList.$.isDone": item.isDone,
-        },
-      },
-      { new: true }
-    );
+    await list.save();
 
-    const updatedItem = updatedListWithItem.itemList.find(
-      (listItem) => listItem.id === itemId
-    );
-
-    return updatedItem;
+    return item;
   } catch (error) {
     throw {
       code: "failedToUpdateItem",
