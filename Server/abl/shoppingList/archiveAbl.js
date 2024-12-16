@@ -21,7 +21,7 @@ async function ArchiveAbl(req, res) {
     const result = await shoppingListDao.archive({
       listId: value.listId,
     });
-    res.json({ success: result });
+    res.json(result);
   } catch (e) {
     res.status(500).json({ message: e.message });
   }

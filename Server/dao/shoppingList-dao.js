@@ -92,7 +92,7 @@ async function archive({ listId }) {
       };
     }
 
-    return updatedList;
+    return { archived: updatedList.archived };
   } catch (error) {
     throw {
       code: "failedToArchiveList",
